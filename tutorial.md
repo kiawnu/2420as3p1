@@ -118,3 +118,109 @@ Connect to your droplet via root to begin this tutorial
 #### Make sure the service is active and running ####
 
 ![Alt text](image-16.png)
+
+## Section 4: How to configure nginx to serve a webpage ##
+
+### Create an index.html file in /var/www/my-site ###
+
+#### Move into the correct folder ####
+```bash
+cd /var/www 
+```
+#### Create a directory named "my-site" ####
+```bash
+sudo mkdir my-site
+```
+
+#### Inside this new directory, create a file index.html ###
+```bash
+sudo vim index.html 
+```
+
+#### Paste the following html content in the index.html file and save it ####
+```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>2420</title>
+        <style>
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+            }
+            h1 {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Hello, World</h1>
+    </body>
+    </html>
+```
+### Now move to the folder /etc/nginx/sites-available ###
+```bash
+cd /etc/nginx/sites-available/
+```
+
+### Create a new file "my-site.conf" in this folder ###
+```bash
+sudo vim my-site.conf
+```
+
+### Paste the following configuration code into the file and save it ###
+
+```bash
+server {
+        listen 80;
+
+        root /var/www/my-site;
+
+        index index.html index.htm;
+
+        server_name _;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+}
+```
+### Now move to the /etc/nginx/sites-enabled folder ###
+```bash
+cd /etc/nginx/sites-enabled
+```
+
+#### Remove the symbolic link "default" in the folder ####
+```bash
+sudo rm default
+```
+
+### Create a symbolic link to the configuration file you just made in this folder ###
+```bash
+ln -s /etc/nginx/sites-available/my-site.conf my-site
+```
+
+#### Check there are no issues with the symbolic link and configuration file ####
+```bash
+sudo nginx -t
+```
+
+#### You should hopefully see the following ####
+![Alt text](image-18.png)
+
+### Now restart the nginx service for new congiguration to take effect ###
+```bash
+sudo systemctl restart nginx
+```
+
+### You should now be able to test whether nginx is serving the html file ###
+
+#### Open your browser and type the ip address of your droplet ####
+If you see the contents of the html file then success !
