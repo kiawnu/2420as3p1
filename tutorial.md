@@ -71,6 +71,7 @@ ssh -i .\.ssh\do-key tutorial-user@147.182.197.18
 ![Alt text](image-8.png)
 
 ## Section 2: Edit ssh configuration so can no longer connect via root ###
+This step is essential for security reasons. The root user has access to all users information and has unrestricted privileges. If the root can be accessed via ssh, outsider can run attacks on our machine by attempting to connect the the root with common passwords. 
 
 ### Locate the sshd_config file located in /etc/ssh ###
     
